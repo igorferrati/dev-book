@@ -8,7 +8,7 @@ CREATE TABLE usuarios (
 
 ### Create user goolang
 
-CREATE USER 'golang'@'localhost'IDENTIFIED BY 'golang';
-GRANT ALL PRIVILEGES ON devbook.* TO 'golang'@'localhost';
+CREATE USER 'golang'@'%'IDENTIFIED BY 'golang';
+GRANT ALL PRIVILEGES ON devbook.* TO 'golang'@'%';
 
 ---
