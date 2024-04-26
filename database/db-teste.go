@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" //driver de conexão com o mysql
 )
 
 func main() {
@@ -23,4 +23,12 @@ func main() {
 	}
 
 	fmt.Println("Conexão aberta!")
+
+	linhas, erro := db.Query("select * from usuarios")
+	if erro != nil {
+		log.Fatal(erro)
+	}
+	defer linhas.Close()
+
+	fmt.Println(linhas)
 }
