@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql
+    restart: always
+    container_name: mysql
+    environment:
+      #defaul root user
+      MYSQL_ROOT_PASSWORD: devbook
+      MYSQL_DATABASE: devbook
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --bind-address=0.0.0.0
+
+volumes:
+  mysql_data:
