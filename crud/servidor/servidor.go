@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type usuario struct {
@@ -95,7 +98,7 @@ func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	if erro := json.NewEncoder(w).Encode(usuarios); erro != nil {
-		w.Write([]byte("Erro ao converter os usuários para json"))
+		w.Write([]byte("Erro ao converter os usuários para JSON"))
 		return
 	}
 
@@ -103,5 +106,37 @@ func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
 
 // BuscarUsuario um usuário específico salvos no banco de dados
 func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
 
+	ID, erro := strconv.ParseUint(parametros["id"], 10, 32)
+	if erro != nil {
+		w.Write([]byte("Erro ao converter o parametro para inteiro"))
+		return
+	}
+
+	db, erro := database.Conectar()
+	if erro != nil {
+		w.Write([]byte("Erro ao conectar no banco de dados"))
+		return
+	}
+	defer db.Close()
+
+	linha, erro := db.Query("select * from usuarios where id = ?", ID)
+	if erro != nil {
+		w.Write([]byte("Erro ao buscar usuário por ID"))
+		return
+	}
+
+	var usuario usuario
+	if linha.Next() {
+		if erro := linha.Scan(&usuario.ID, &usuario.Nome, &usuario.Email); erro != nil {
+			w.Write([]byte("Erro ao escanear linha de usuário"))
+			return
+		}
+	}
+
+	if erro := json.NewEncoder(w).Encode(usuario); erro != nil {
+		w.Write([]byte("Erro ao convertr usuário para JSON"))
+		return
+	}
 }
