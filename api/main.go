@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Print("api")
+	fmt.Println("api")
 
 	r := router.Gerar()
 
