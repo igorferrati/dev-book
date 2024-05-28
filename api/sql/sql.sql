@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS devbook;
+USE devbook;
 
 DROP TABLE IF EXISTS usuarios;
 
@@ -10,4 +11,3 @@ CREATE TABLE usuarios(
     senha varchar(50) not null unique,
     CriadoEm timestamp default current_timestamp()
 ) ENGINE=INNODB;
-
