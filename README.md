@@ -1,5 +1,9 @@
-# dev-book
+# DeVbook
 
-### Banco MySql
+Desenvolvimento de rede social DeVbook em golang, modelo ```MVC```, qual a estrutura base:
 
-- docker compose
+- Database em docker (mysql)
+- API 
+- Frontend
+
+---
