@@ -2,4 +2,4 @@
 
 ### Banco MySql
 
-= docker compose
+- docker compose
