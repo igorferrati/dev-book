@@ -119,7 +119,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if usuarioID != usuarioIDNoToken {
-		respostas.Erro(w, http.StatusForbidden, errors.New("Usuário não possui permissão para realizar esta ação."))
+		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possíve editar usuários que não seja o seu."))
 		return
 	}
 
@@ -163,6 +163,17 @@ func DeletarUsuario(w http.ResponseWriter, r *http.Request) {
 	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
 	if erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	usuarioIDNoToken, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if usuarioID != usuarioIDNoToken {
+		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possíve deletar usuários que não seja o seu."))
 		return
 	}
 
