@@ -338,6 +338,7 @@ func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
 
 	if usuarioIDNoToken != usuarioID {
 		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possível atualizar a senha de um usuário que não seja o seu."))
+		return
 	}
 
 	corpoRequisicao, erro := io.ReadAll(r.Body)
