@@ -40,7 +40,7 @@ func (repositorio Usuarios) Criar(usuario modelos.Usuario) (uint64, error) {
 
 }
 
-// Buscar trás todos usuários que atendem um filtro de nome ou nick
+// Buscar traz todos usuários que atendem um filtro de nome ou nick
 func (repositorio Usuarios) Buscar(nomeOuNick string) ([]modelos.Usuario, error) {
 	nomeOuNick = fmt.Sprintf("%%%s%%", nomeOuNick) // %nomeOuNick%
 
@@ -74,7 +74,7 @@ func (repositorio Usuarios) Buscar(nomeOuNick string) ([]modelos.Usuario, error)
 	return usuarios, nil
 }
 
-// BuscarPorID trás um usuário do banco de dados
+// BuscarPorID traz um usuário do banco de dados
 func (repositorio Usuarios) BuscarPorID(ID uint64) (modelos.Usuario, error) {
 	linhas, erro := repositorio.db.Query(
 		"select id, nome, nick, email, criadoEM from usuarios where id = ?", ID,
@@ -250,4 +250,38 @@ func (repositorio Usuarios) BuscarSeguindo(usuarioID uint64) ([]modelos.Usuario,
 	}
 
 	return usuarios, nil
+}
+
+// BuscarSenha traz a senha de um usuário pelo ID
+func (repositorio Usuarios) BuscarSenha(usuarioID uint64) (string, error) {
+	linha, erro := repositorio.db.Query("select senha from usuarios where id = ?", usuarioID)
+	if erro != nil {
+		return "", erro
+	}
+	defer linha.Close()
+
+	var usuario modelos.Usuario
+
+	if linha.Next() {
+		if erro = linha.Scan(&usuario.Senha); erro != nil {
+			return "", erro
+		}
+	}
+
+	return usuario.Senha, nil
+}
+
+// AtualizarSenha altera a senha de um usuário
+func (repositorio Usuarios) AtualizarSenha(UsuariosID uint64, senha string) error {
+	statement, erro := repositorio.db.Prepare("Update usuarios set senha = ? where id = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(senha, UsuariosID); erro != nil {
+		return erro
+	}
+
+	return nil
 }
