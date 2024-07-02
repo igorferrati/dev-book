@@ -19,6 +19,8 @@ type Rota struct {
 func Configurar(r *mux.Router) *mux.Router {
 	rotas := rotasUsuarios
 	rotas = append(rotas, rotaLogin)
+	//append para cada um dos itens dentro do slcie
+	rotas = append(rotas, rotasPublicacoes...)
 
 	for _, rota := range rotas {
 
